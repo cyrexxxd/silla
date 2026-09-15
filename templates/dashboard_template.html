@@ -305,13 +305,17 @@
   }
 
   function renderFileRow(f) {
+    // Prefer opening the actual downloaded file directly (PDF preview, native app, ...)
+    // over Canvas's file page, which needs a login and just wraps the same content.
+    const openUrl = f.file_url || f.canvas_url;
+    const hint = f.file_url ? "Открыть" : (f.canvas_url ? "Canvas ↗" : "");
     const inner = `
       <span class="file-icon">${escapeHtml(fileExt(f.filename))}</span>
       <span class="file-name">${escapeHtml(f.filename)}</span>
       <span class="file-meta mono">${fmtSize(f.size_bytes)}</span>
-      ${f.canvas_url ? '<span class="open-hint">Canvas ↗</span>' : ""}`;
-    return f.canvas_url
-      ? `<a class="file-row" href="${escapeHtml(f.canvas_url)}" target="_blank" rel="noopener">${inner}</a>`
+      ${hint ? `<span class="open-hint">${hint}</span>` : ""}`;
+    return openUrl
+      ? `<a class="file-row" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">${inner}</a>`
       : `<div class="file-row">${inner}</div>`;
   }
 

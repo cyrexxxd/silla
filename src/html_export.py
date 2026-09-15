@@ -2,6 +2,7 @@
 network calls except the (optional) Google Fonts stylesheet. Just Python + a browser.
 """
 import json
+from pathlib import Path
 
 from . import config, state_store
 
@@ -14,12 +15,19 @@ def _group_files_by_course(files: list[dict]) -> dict:
     for f in files:
         cid = str(f["course_id"])
         entry = grouped.setdefault(cid, {"course_name": f["course_name"], "files": []})
+        local_path = f.get("local_path")
+        # file:// link to the actual downloaded file — opens it directly (PDF preview,
+        # native app, etc.) instead of round-tripping through a Canvas login page.
+        # Only meaningful for this local dashboard; the hosted Claude Artifact has no
+        # filesystem access and must fall back to canvas_url.
+        file_url = Path(local_path).resolve().as_uri() if local_path else None
         entry["files"].append(
             {
                 "filename": f["filename"],
                 "size_bytes": f["size_bytes"],
                 "folder_path": f["folder_path"],
                 "canvas_url": f["canvas_url"],
+                "file_url": file_url,
             }
         )
     return grouped
