@@ -27,7 +27,7 @@
 ### 2. Склонируй репозиторий
 
 ```bash
-git clone https://github.com/cyrexxxd/zachetka ~/PycharmProjects/silla
+git clone https://github.com/cyrexxxd/silla ~/PycharmProjects/silla
 cd ~/PycharmProjects/silla
 ```
 
