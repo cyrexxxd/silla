@@ -1,0 +1,752 @@
+<title>Зачётка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ink-900: #131a2e;
+    --ink-700: #2b3350;
+    --ink-500: #5a6280;
+    --ink-300: #a4abc4;
+    --paper-0: #eef0f5;
+    --paper-50: #f7f8fb;
+    --card: #ffffff;
+    --line: #dfe2ec;
+    --accent: #2a3fe0;
+    --accent-soft: #e7e9fd;
+    --good: #1f9d6c;
+    --good-soft: #e3f6ed;
+    --warn: #b97113;
+    --warn-soft: #faeed8;
+    --bad: #d64545;
+    --bad-soft: #fbe6e6;
+    --shadow: 0 1px 2px rgba(19, 26, 46, 0.04), 0 8px 24px -12px rgba(19, 26, 46, 0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink-900: #edf0fa;
+      --ink-700: #c7cce2;
+      --ink-500: #8d93b2;
+      --ink-300: #565d80;
+      --paper-0: #0b0e1a;
+      --paper-50: #121625;
+      --card: #171c30;
+      --line: #262c47;
+      --accent: #7f8cff;
+      --accent-soft: #232a52;
+      --good: #4bd39a;
+      --good-soft: #163629;
+      --warn: #e3a94a;
+      --warn-soft: #3a2e14;
+      --bad: #f07a7a;
+      --bad-soft: #3a1f22;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink-900: #edf0fa;
+    --ink-700: #c7cce2;
+    --ink-500: #8d93b2;
+    --ink-300: #565d80;
+    --paper-0: #0b0e1a;
+    --paper-50: #121625;
+    --card: #171c30;
+    --line: #262c47;
+    --accent: #7f8cff;
+    --accent-soft: #232a52;
+    --good: #4bd39a;
+    --good-soft: #163629;
+    --warn: #e3a94a;
+    --warn-soft: #3a2e14;
+    --bad: #f07a7a;
+    --bad-soft: #3a1f22;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper-0);
+    color: var(--ink-900);
+    font-family: "Manrope", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 24px 64px;
+  }
+
+  /* ---- header ---- */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h1 a { cursor: pointer; }
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-500);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 14px 8px 10px;
+    box-shadow: var(--shadow);
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--good);
+    flex: none;
+  }
+  .dot.stale { background: var(--warn); }
+  .dot.unknown { background: var(--ink-300); }
+
+  /* ---- section headings ---- */
+  h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin: 0 0 14px;
+  }
+  section { margin-bottom: 36px; }
+
+  /* ---- breadcrumb / back ---- */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 18px;
+    cursor: pointer;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  /* ---- course cards (overview grid) ---- */
+  .courses {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 14px;
+  }
+  .course-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    cursor: pointer;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .course-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .course-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(19,26,46,.08), 0 16px 32px -16px rgba(19,26,46,.2); }
+  }
+  .course-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .course-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .course-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .course-name-lg {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  .ring-pct {
+    flex: none;
+    position: relative;
+    width: 56px;
+    height: 56px;
+  }
+  .ring-pct.lg { width: 84px; height: 84px; }
+  .ring-pct svg { transform: rotate(-90deg); }
+  .ring-pct .pct-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .ring-pct.lg .pct-label { font-size: 19px; }
+  .breakdown { display: flex; flex-direction: column; gap: 6px; }
+  .breakdown-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    font-size: 12.5px;
+    color: var(--ink-700);
+  }
+  .breakdown-row .bar-track {
+    grid-column: 1 / -1;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--paper-0);
+    overflow: hidden;
+  }
+  .breakdown-row .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .breakdown-name { grid-column: 1; }
+  .breakdown-weight { color: var(--ink-500); }
+  .last-synced {
+    font-size: 11px;
+    color: var(--ink-300);
+    border-top: 1px dashed var(--line);
+    padding-top: 10px;
+  }
+
+  /* ---- two column lower area (overview) ---- */
+  .lower {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .lower { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .panel-inner { padding: 16px 18px 18px; }
+
+  /* ---- course detail hero ---- */
+  .detail-hero {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 24px;
+  }
+  .detail-hero .breakdown { flex: 1; min-width: 220px; }
+  .detail-hero .breakdown-row { font-size: 13.5px; }
+
+  /* ---- deadlines ---- */
+  .day-group + .day-group { margin-top: 18px; }
+  .day-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 8px;
+  }
+  .deadline-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px 10px 12px;
+    border-left: 3px solid var(--ink-300);
+    border-radius: 8px;
+    background: var(--paper-50);
+    margin-bottom: 6px;
+  }
+  a.deadline-row { cursor: pointer; }
+  @media (prefers-reduced-motion: no-preference) {
+    a.deadline-row { transition: background 0.12s ease; }
+  }
+  a.deadline-row:hover { background: var(--accent-soft); }
+  .deadline-row.due-today { border-left-color: var(--bad); }
+  .deadline-row.due-soon { border-left-color: var(--warn); }
+  .deadline-row.done { border-left-color: var(--good); opacity: 0.7; }
+  .deadline-main { flex: 1; min-width: 0; }
+  .deadline-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .deadline-course {
+    font-size: 11.5px;
+    color: var(--ink-500);
+    margin-top: 2px;
+  }
+  .badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    flex: none;
+  }
+  .badge.quiz { background: var(--warn-soft); color: var(--warn); }
+  .badge.assignment { background: var(--accent-soft); color: var(--accent); }
+  .badge.event { background: var(--paper-0); color: var(--ink-500); }
+  .deadline-time {
+    font-size: 12px;
+    color: var(--ink-500);
+    flex: none;
+    text-align: right;
+    min-width: 64px;
+  }
+  .open-hint {
+    flex: none;
+    font-size: 10.5px;
+    color: var(--ink-300);
+  }
+
+  /* ---- files ---- */
+  .file-course + .file-course { margin-top: 16px; }
+  .file-course-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink-700);
+  }
+  .file-course-name a:hover { color: var(--accent); }
+  .file-folder {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-300);
+    margin: 10px 0 4px;
+  }
+  .file-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 6px;
+    margin: 0 -6px;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+    border-radius: 6px;
+  }
+  .file-row:last-child { border-bottom: none; }
+  a.file-row { cursor: pointer; }
+  @media (prefers-reduced-motion: no-preference) {
+    a.file-row { transition: background 0.12s ease; }
+  }
+  a.file-row:hover { background: var(--accent-soft); }
+  .file-icon {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .file-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ink-900);
+    font-weight: 500;
+  }
+  .file-meta { color: var(--ink-300); font-size: 11px; flex: none; }
+  .file-nolink {
+    flex: none;
+    font-size: 10.5px;
+    color: var(--ink-300);
+  }
+  .files-note {
+    font-size: 11.5px;
+    color: var(--ink-300);
+    padding: 12px 18px 14px;
+    border-top: 1px dashed var(--line);
+  }
+
+  .empty-note {
+    font-size: 13px;
+    color: var(--ink-500);
+    padding: 6px 2px;
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Narxoz · Canvas</p>
+      <h1><a href="#/" id="titleLink">Зачётка</a></h1>
+    </div>
+    <div class="sync-status" id="syncStatus">
+      <span class="dot unknown" id="syncDot"></span>
+      <span id="syncText">подключение…</span>
+    </div>
+  </header>
+
+  <main id="app">
+    <p class="empty-note">Загрузка…</p>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const RING_R = 24;
+  const RING_CIRC = 2 * Math.PI * RING_R;
+  const RING_R_LG = 36;
+  const RING_CIRC_LG = 2 * Math.PI * RING_R_LG;
+
+  const state = { courses: [], events: [], filesByCourse: {}, meta: null };
+
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[c]));
+  }
+
+  function fmtPct(n) {
+    if (n === null || n === undefined || Number.isNaN(n)) return "—";
+    return Math.round(n) + "%";
+  }
+
+  function ringColor(pct) {
+    if (pct === null || pct === undefined) return "var(--ink-300)";
+    if (pct >= 80) return "var(--good)";
+    if (pct >= 60) return "var(--accent)";
+    if (pct >= 40) return "var(--warn)";
+    return "var(--bad)";
+  }
+
+  function renderRing(pct, large) {
+    const r = large ? RING_R_LG : RING_R;
+    const circ = large ? RING_CIRC_LG : RING_CIRC;
+    const size = large ? 84 : 56;
+    const c = size / 2;
+    const p = pct === null || pct === undefined ? 0 : Math.max(0, Math.min(100, pct));
+    const offset = circ * (1 - p / 100);
+    const color = ringColor(pct);
+    return `
+      <div class="ring-pct${large ? " lg" : ""}">
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+          <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="var(--paper-0)" stroke-width="${large ? 7 : 5}"/>
+          <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${color}" stroke-width="${large ? 7 : 5}"
+            stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="pct-label mono">${fmtPct(pct)}</div>
+      </div>`;
+  }
+
+  function renderBreakdown(breakdown) {
+    if (!breakdown || !breakdown.length) {
+      return `<p class="empty-note" style="padding:0;">Пока нет оценённых заданий по группам.</p>`;
+    }
+    return breakdown.map((g) => {
+      const w = g.weight_pct === null || g.weight_pct === undefined ? null : Math.round(g.weight_pct);
+      const s = g.group_score_pct;
+      return `
+        <div class="breakdown-row">
+          <span class="breakdown-name">${escapeHtml(g.group_name)}</span>
+          <span class="breakdown-weight mono">${w === null ? "—" : w + "%"}</span>
+          <span class="mono">${fmtPct(s)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${s ? Math.min(100, s) : 0}%"></div></div>
+        </div>`;
+    }).join("");
+  }
+
+  function fileExt(name) {
+    const m = /\.([a-z0-9]+)$/i.exec(name || "");
+    return m ? m[1].toUpperCase().slice(0, 4) : "";
+  }
+
+  function fmtSize(bytes) {
+    if (!bytes && bytes !== 0) return "";
+    if (bytes < 1024) return bytes + " Б";
+    if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + " КБ";
+    return (bytes / (1024 * 1024)).toFixed(1) + " МБ";
+  }
+
+  function renderFileRow(f) {
+    const inner = `
+      <span class="file-icon">${escapeHtml(fileExt(f.filename))}</span>
+      <span class="file-name">${escapeHtml(f.filename)}</span>
+      <span class="file-meta mono">${fmtSize(f.size_bytes)}</span>
+      ${f.canvas_url ? '<span class="open-hint">Canvas ↗</span>' : ""}`;
+    return f.canvas_url
+      ? `<a class="file-row" href="${escapeHtml(f.canvas_url)}" target="_blank" rel="noopener">${inner}</a>`
+      : `<div class="file-row">${inner}</div>`;
+  }
+
+  function groupFilesByFolder(files) {
+    const groups = {};
+    (files || []).forEach((f) => {
+      const key = f.folder_path || "";
+      (groups[key] = groups[key] || []).push(f);
+    });
+    return groups;
+  }
+
+  function renderFilesForCourse(entry) {
+    if (!entry || !entry.files || !entry.files.length) {
+      return `<p class="empty-note" style="padding:0;">Нет файлов.</p>`;
+    }
+    const groups = groupFilesByFolder(entry.files);
+    return Object.keys(groups).sort().map((folder) => `
+      ${folder ? `<div class="file-folder">${escapeHtml(folder)}</div>` : ""}
+      ${groups[folder].map(renderFileRow).join("")}
+    `).join("");
+  }
+
+  function dayBucket(dueAt) {
+    if (!dueAt) return { key: "later", label: "Без даты" };
+    const due = new Date(dueAt);
+    const now = new Date();
+    const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const diffDays = Math.round((startOfDay(due) - startOfDay(now)) / 86400000);
+    if (diffDays < 0) return { key: "overdue", label: "Просрочено" };
+    if (diffDays === 0) return { key: "today", label: "Сегодня" };
+    if (diffDays === 1) return { key: "tomorrow", label: "Завтра" };
+    if (diffDays <= 7) return { key: "week", label: "На этой неделе" };
+    return { key: "later", label: "Позже" };
+  }
+
+  function renderDeadlineRow(e, opts) {
+    opts = opts || {};
+    const bucket = dayBucket(e.due_at).key;
+    let rowClass = "";
+    if (e.submitted) rowClass = "done";
+    else if (bucket === "overdue" || bucket === "today") rowClass = "due-today";
+    else if (bucket === "tomorrow" || bucket === "week") rowClass = "due-soon";
+    const time = e.due_at
+      ? new Date(e.due_at).toLocaleString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
+      : "";
+    const courseLine = opts.hideCourse
+      ? (e.points_possible ? `${e.points_possible} б.` : "")
+      : `${escapeHtml(e.course_name)}${e.points_possible ? " · " + e.points_possible + " б." : ""}`;
+    const inner = `
+      <span class="badge ${escapeHtml(e.type)}">${escapeHtml(e.type)}</span>
+      <div class="deadline-main">
+        <div class="deadline-title">${escapeHtml(e.title)}</div>
+        ${courseLine ? `<div class="deadline-course">${courseLine}</div>` : ""}
+      </div>
+      <div class="deadline-time mono">${time}</div>
+      ${e.html_url ? '<span class="open-hint">Canvas ↗</span>' : ""}`;
+    return e.html_url
+      ? `<a class="deadline-row ${rowClass}" href="${escapeHtml(e.html_url)}" target="_blank" rel="noopener">${inner}</a>`
+      : `<div class="deadline-row ${rowClass}">${inner}</div>`;
+  }
+
+  function renderDeadlineGroups(events, opts) {
+    if (!events.length) return `<p class="empty-note">Пока нет предстоящих дедлайнов.</p>`;
+    const order = ["overdue", "today", "tomorrow", "week", "later"];
+    const groups = {};
+    for (const e of events) {
+      const b = dayBucket(e.due_at);
+      (groups[b.key] = groups[b.key] || { label: b.label, items: [] }).items.push(e);
+    }
+    return order
+      .filter((k) => groups[k])
+      .map((k) => {
+        const g = groups[k];
+        const rows = g.items.map((e) => renderDeadlineRow(e, opts)).join("");
+        return `<div class="day-group"><div class="day-label">${g.label}</div>${rows}</div>`;
+      })
+      .join("");
+  }
+
+  /* ---------------- views ---------------- */
+
+  function viewOverview() {
+    const courses = state.courses.slice().sort((a, b) => (a.name || "").localeCompare(b.name || "", "ru"));
+    const courseCards = courses.length
+      ? courses.map((c) => `
+          <a class="course-card" href="#course/${encodeURIComponent(c.id)}">
+            <div class="course-head">
+              <span class="course-name">${escapeHtml(c.name)}</span>
+              ${renderRing(c.current_score_pct)}
+            </div>
+            <div class="breakdown">${renderBreakdown(c.assignment_group_breakdown)}</div>
+            <div class="last-synced mono">синхронизировано: ${c.last_synced_at ? new Date(c.last_synced_at).toLocaleString("ru-RU") : "—"}</div>
+          </a>`).join("")
+      : `<p class="empty-note">Курсы ещё не синхронизированы.</p>`;
+
+    const filesHtml = Object.keys(state.filesByCourse).length
+      ? Object.keys(state.filesByCourse).map((cid) => {
+          const entry = state.filesByCourse[cid];
+          return `
+            <div class="file-course">
+              <div class="file-course-name"><a href="#course/${encodeURIComponent(cid)}">${escapeHtml(entry.course_name)} →</a></div>
+              ${renderFilesForCourse(entry)}
+            </div>`;
+        }).join("")
+      : `<p class="empty-note">Файлы ещё не синхронизированы.</p>`;
+
+    return `
+      <section>
+        <h2>Дисциплины</h2>
+        <div class="courses">${courseCards}</div>
+      </section>
+
+      <div class="lower">
+        <section class="panel">
+          <h2 style="padding: 16px 18px 0;">Ближайшие дедлайны</h2>
+          <div class="panel-inner">${renderDeadlineGroups(state.events)}</div>
+        </section>
+
+        <section class="panel">
+          <h2 style="padding: 16px 18px 0;">Файлы курсов</h2>
+          <div class="panel-inner">${filesHtml}</div>
+          <p class="files-note">Нажмите на файл, чтобы открыть его.</p>
+        </section>
+      </div>`;
+  }
+
+  function viewCourse(id) {
+    const course = state.courses.find((c) => String(c.id) === String(id));
+    if (!course) {
+      return `
+        <a class="back-link" href="#/">← Все дисциплины</a>
+        <p class="empty-note">Курс не найден (возможно, ещё не синхронизирован).</p>`;
+    }
+    const courseEvents = state.events.filter((e) => String(e.course_id) === String(id));
+    const filesEntry = state.filesByCourse[id];
+
+    return `
+      <a class="back-link" href="#/">← Все дисциплины</a>
+
+      <div class="detail-hero">
+        ${renderRing(course.current_score_pct, true)}
+        <div style="flex:1; min-width:0;">
+          <div class="course-name-lg">${escapeHtml(course.name)}</div>
+          <div class="last-synced mono" style="border-top:none; padding-top:6px;">синхронизировано: ${course.last_synced_at ? new Date(course.last_synced_at).toLocaleString("ru-RU") : "—"}</div>
+        </div>
+        <div class="breakdown">${renderBreakdown(course.assignment_group_breakdown)}</div>
+      </div>
+
+      <div class="lower">
+        <section class="panel">
+          <h2 style="padding: 16px 18px 0;">Дедлайны по курсу</h2>
+          <div class="panel-inner">${renderDeadlineGroups(courseEvents, { hideCourse: true })}</div>
+        </section>
+
+        <section class="panel">
+          <h2 style="padding: 16px 18px 0;">Файлы</h2>
+          <div class="panel-inner">${renderFilesForCourse(filesEntry)}</div>
+          <p class="files-note">Нажмите на файл, чтобы открыть его.</p>
+        </section>
+      </div>`;
+  }
+
+  function parseRoute() {
+    const h = location.hash.replace(/^#\/?/, "");
+    const m = /^course\/(.+)$/.exec(h);
+    return m ? { view: "course", id: decodeURIComponent(m[1]) } : { view: "overview" };
+  }
+
+  function render() {
+    const route = parseRoute();
+    document.getElementById("app").innerHTML =
+      route.view === "course" ? viewCourse(route.id) : viewOverview();
+  }
+
+  function updateSyncStatus(meta) {
+    const dot = document.getElementById("syncDot");
+    const text = document.getElementById("syncText");
+    if (!meta || !meta.last_sync_at) {
+      dot.className = "dot unknown";
+      text.textContent = "нет данных синхронизации";
+      return;
+    }
+    const last = new Date(meta.last_sync_at);
+    const hoursAgo = (Date.now() - last.getTime()) / 3600000;
+    dot.className = "dot" + (hoursAgo > 30 ? " stale" : "");
+    const when = last.toLocaleString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+    const errCount = Array.isArray(meta.errors) ? meta.errors.length : 0;
+    text.textContent = `синхр. ${when}${errCount ? ` · ${errCount} ошибок` : ""}`;
+  }
+
+  window.addEventListener("hashchange", render);
+
+  async function init() {
+    const db = (window.claude && window.claude.use) ? await window.claude.use("db") : null;
+    if (!db) {
+      document.getElementById("syncText").textContent = "хранилище недоступно";
+      document.getElementById("app").innerHTML = `<p class="empty-note">Нет доступа к данным. Откройте страницу через Claude.</p>`;
+      return;
+    }
+
+    db.collection("courses").onSnapshot((snap) => {
+      state.courses = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter(Boolean);
+      render();
+    });
+
+    db.doc("sync/calendar").onSnapshot((snap) => {
+      state.events = (snap.exists && snap.data().events) || [];
+      render();
+    });
+
+    db.collection("files").onSnapshot((snap) => {
+      const byCourse = {};
+      snap.docs.forEach((d) => { byCourse[d.id] = d.data(); });
+      state.filesByCourse = byCourse;
+      render();
+    });
+
+    db.doc("sync/meta").onSnapshot((snap) => {
+      state.meta = snap.exists ? snap.data() : null;
+      updateSyncStatus(state.meta);
+    });
+
+    render();
+  }
+
+  init();
+})();
+</script>

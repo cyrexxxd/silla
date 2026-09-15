@@ -1,0 +1,7 @@
+.env
+state/
+artifact_payload/
+logs/
+__pycache__/
+*.pyc
+.venv/
