@@ -5,7 +5,7 @@ grades/calendar, downloads files, writes state/canvas.sqlite3 and artifact_paylo
 """
 import sys
 
-from . import artifact_export, calendar_build, canvas_client, config, files_sync, grades, state_store
+from . import artifact_export, calendar_build, canvas_client, config, files_sync, grades, html_export, state_store
 
 
 def sync_course(conn, canvas, course, window_end, errors: list) -> tuple[int, int]:
@@ -99,8 +99,6 @@ def main():
         log_id = state_store.start_sync_log(conn)
 
         courses = canvas_client.active_courses(canvas)
-        if len(courses) != 6:
-            print(f"NOTE: expected 6 active courses, found {len(courses)} — check enrollment_state filter")
 
         total_assignments = 0
         total_files = 0
@@ -119,14 +117,16 @@ def main():
             errors=errors,
         )
 
-        payload = artifact_export.write_payload(conn)
+        artifact_export.write_payload(conn)
+        dashboard_path = html_export.write_dashboard(conn)
 
     print(f"\nSynced {len(courses)} courses, {total_assignments} calendar items, {total_files} files downloaded.")
     if errors:
         print(f"Errors ({len(errors)}):")
         for e in errors:
             print(f"  - {e}")
-    print(f"\nWrote {config.ARTIFACT_PAYLOAD_PATH}")
+    print(f"\nDashboard: {dashboard_path}")
+    print(f"(raw data for the optional Claude/Artifact flow: {config.ARTIFACT_PAYLOAD_PATH})")
     return 0 if not errors else 1
 
 

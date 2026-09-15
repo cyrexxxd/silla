@@ -1,22 +1,17 @@
-# Зачётка — дашборд для Canvas
+# Silla — дашборд для Canvas
 
 Личный дашборд курсов: прогресс по силлабусу, ближайшие дедлайны и файлы всех твоих
 дисциплин на одной странице, с автоматической синхронизацией из Canvas LMS.
 
-Каждый ставит себе **свою собственную** копию — со своим Canvas-токеном и своим приватным
-дашбордом. Никто не видит чужие оценки: у каждого пользователя отдельный Artifact и
-отдельная база данных.
-
-Работает через [Claude Code](https://claude.com/claude-code): Python-скрипт тянет данные
-из Canvas на твой компьютер, а Claude публикует и обновляет твою личную веб-страницу
-(Artifact) с этими данными.
+**Никакого ИИ и подписок не нужно.** Python-скрипт тянет данные из Canvas и сам
+генерирует готовую веб-страницу (`dashboard.html`) — открываешь её в браузере, как любой
+локальный файл. Каждый ставит себе свою собственную копию со своим Canvas-токеном; никто
+не видит чужие оценки.
 
 ## Что нужно
 
-- macOS (скрипты рассчитаны на launchd/zsh; на Linux всё кроме автоматизации через launchd
-  тоже заработает)
+- macOS или Linux
 - Python 3.10+
-- [Claude Code](https://claude.com/claude-code)
 - Личный access token Canvas (см. шаг 1)
 
 ## Установка
@@ -24,7 +19,7 @@
 ### 1. Получи Canvas API token
 
 В Canvas: **Account → Settings → New Access Token**. Дай ему любое название (например
-"Зачётка"), сохрани — Canvas покажет токен только один раз.
+"Silla"), сохрани — Canvas покажет токен только один раз.
 
 Также посмотри домен своего Canvas — адрес, на который ты заходишь в браузере (например
 `myuni.instructure.com` или, как у Narxoz, свой собственный домен вида `canvas.myuni.kz`).
@@ -32,8 +27,8 @@
 ### 2. Склонируй репозиторий
 
 ```bash
-git clone <URL этого репозитория> ~/PycharmProjects/canvas-dashboard
-cd ~/PycharmProjects/canvas-dashboard
+git clone https://github.com/cyrexxxd/zachetka ~/PycharmProjects/silla
+cd ~/PycharmProjects/silla
 ```
 
 ### 3. Настрой окружение
@@ -55,64 +50,74 @@ CANVAS_BASE_URL=https://<твой домен Canvas>
 `.env` никогда не попадает в git (он в `.gitignore`) — токен остаётся только на твоём
 компьютере.
 
-### 4. Проверь подключение и сделай первый синк
+### 4. Синхронизируй и открой дашборд
 
 ```bash
 ./scripts/run_sync.sh
 ```
 
 Это найдёт твои активные курсы, скачает файлы в `~/Documents/canvas files/<курс>/_synced/`
-и запишет `artifact_payload/latest.json`. Первый запуск может занять несколько минут в
-зависимости от скорости твоего Canvas.
+и сгенерирует `dashboard.html` в папке проекта. Открой этот файл в браузере (двойным
+щелчком в Finder, или `open dashboard.html`) — готово, весь семестр на одной странице.
 
-### 5. Опубликуй свой дашборд
+Первый запуск может занять несколько минут в зависимости от скорости твоего Canvas.
 
-Открой Claude Code в папке проекта и попроси:
+### 5. Автообновление
 
-> Опубликуй artifact/dashboard.html как Artifact с capability `db`, и запушь в него данные
-> из artifact_payload/latest.json (courses/{id}, sync/calendar, files/{course_id},
-> sync/meta — см. .claude/skills/canvas-sync/SKILL.md).
+Проще всего — гонять `./scripts/run_sync.sh` руками перед тем, как заглянуть на дашборд
+(идемпотентно, безопасно запускать сколько угодно раз). Для полной автоматизации на macOS
+можно добавить `launchd`-задачу, которая запускает этот скрипт раз в день:
 
-Claude опубликует страницу и даст тебе ссылку вида `https://claude.ai/code/artifact/...`.
-Сохрани эту ссылку в `.env`:
+```bash
+cat > ~/Library/LaunchAgents/com.silla.sync.plist <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.silla.sync</string>
+  <key>ProgramArguments</key>
+  <array><string>/bin/bash</string><string>-c</string>
+    <string>cd ~/PycharmProjects/silla && ./scripts/run_sync.sh</string></array>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>7</integer><key>Minute</key><integer>0</integer></dict>
+</dict></plist>
+PLIST
+launchctl load ~/Library/LaunchAgents/com.silla.sync.plist
 ```
-DASHBOARD_URL=https://claude.ai/code/artifact/твой-id
-```
 
-Открой ссылку — там уже должны быть твои реальные курсы, оценки и файлы.
+`dashboard.html` обновится каждое утро в 7:00 — просто обнови страницу в браузере.
 
-### 6. Настрой автообновление (опционально)
+## Бонус: живая ссылка через Claude (опционально)
 
-Попроси Claude Code создать ежедневную scheduled-задачу (`mcp__scheduled-tasks`), которая
-каждое утро запускает `./scripts/run_sync.sh` и пушит результат в твой `DASHBOARD_URL` по
-инструкции `.claude/skills/canvas-sync/SKILL.md`. Ручной запуск в любой момент — та же
-команда `./scripts/run_sync.sh`, затем попросить Claude запушить результат.
+Если у тебя есть [Claude Code](https://claude.com/claude-code), можно вместо локального
+файла опубликовать дашборд как веб-страницу со своей ссылкой и живым обновлением без
+пересборки файла — см. `.claude/skills/canvas-sync/SKILL.md`. Это не обязательно: локальный
+`dashboard.html` из шага 4 даёт ровно тот же дашборд без каких-либо подписок.
+
+Важно: у такой опубликованной страницы (Artifact с базой данных) технически **нет
+публичного режима** — она видна только внутри организации Claude владельца. То есть даже
+с Claude это не "один дашборд на весь универ", а личная ссылка для тебя одного.
 
 ## Как это устроено
 
 - **`src/`** — Python-синк: авторизация в Canvas, расчёт процентов по силлабусу (веса
   групп заданий), скачивание файлов, локальная SQLite-база (`state/canvas.sqlite3`) как
-  источник правды, экспорт в `artifact_payload/latest.json`.
-- **`artifact/dashboard.html`** — сама веб-страница дашборда (карточки курсов, дедлайны,
-  файлы, отдельная страница на каждый предмет по клику).
-- **`.claude/skills/canvas-sync/`** — инструкция для Claude, как взять `latest.json` и
-  запушить его в твой Artifact.
+  источник правды.
+- **`templates/dashboard_template.html` → `dashboard.html`** — статическая страница
+  дашборда с данными внутри; пересобирается при каждом синке, ничего кроме браузера не
+  требует.
+- **`artifact/dashboard.html`** и **`.claude/skills/canvas-sync/`** — опциональная версия
+  через Claude Artifact (см. "Бонус" выше).
 
-## О приватности и общем доступе
+## Приватность
 
-Artifact с базой данных (`db` capability) технически **не может быть публичным** — он
-виден только внутри организации Claude владельца. Поэтому это не "один дашборд на весь
-универ": у каждого своя приватная копия со своими данными, которые никто другой не видит.
-Токен Canvas никогда не покидает твой `.env` и никогда не пишется в Artifact — туда идут
-только уже обработанные данные (названия курсов, даты, проценты, ссылки на файлы в самом
-Canvas).
+Токен Canvas никогда не покидает твой `.env`. `dashboard.html` содержит только уже
+обработанные данные (названия курсов, даты, проценты, ссылки на файлы в самом Canvas) и
+никогда не коммитится в git.
 
 ## Известные ограничения
 
 - Canvas API не отдаёт содержимое .pptx/.docx для предпросмотра в браузере — дашборд
-  просто ссылается на страницу файла в самом Canvas (`canvas_url`), открывается там же,
-  где ты обычно смотришь материалы.
+  просто ссылается на страницу файла в самом Canvas, открывается там же, где ты обычно
+  смотришь материалы.
 - Classic Quizzes и New Quizzes (Quizzes.Next) по-разному видны в API Canvas — синк
   использует Assignments API как единый источник дедлайнов, это покрывает оба варианта.
-- Автообновление через `mcp__scheduled-tasks` работает, пока открыт Claude Code (или при
-  следующем запуске, если было закрыто) — это не постоянно работающий демон.

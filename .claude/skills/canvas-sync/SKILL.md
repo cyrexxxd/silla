@@ -1,13 +1,18 @@
 ---
 name: canvas-sync
-description: Sync Canvas coursework (grades, deadlines, files) and push it to your Зачётка dashboard. Use when the user asks to sync/update/refresh their Canvas data, or on a schedule.
+description: Sync Canvas coursework (grades, deadlines, files) and push it to your Silla dashboard. Use when the user asks to sync/update/refresh their Canvas data, or on a schedule.
 ---
 
 # canvas-sync
 
-Refreshes your "Зачётка" dashboard (a published Claude Artifact) with the latest data from
+Refreshes your "Silla" dashboard (a published Claude Artifact) with the latest data from
 Canvas. Two stages, because only a Claude Code turn can write to the Artifact's database —
 a plain script cannot call it directly.
+
+Note: this Artifact flow is an **optional bonus** — `./scripts/run_sync.sh` alone already
+regenerates a fully working local `dashboard.html` with zero Claude/subscription
+involvement (see the README). Only use this skill if the user specifically wants the
+hosted, live-updating Artifact version in addition to that.
 
 **Dashboard URL**: read `DASHBOARD_URL` from the project's `.env` file
 (`~/PycharmProjects/canvas-dashboard/.env`, or wherever you cloned this project). If it's

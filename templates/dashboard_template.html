@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Silla</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
@@ -20,9 +25,8 @@
     --bad-soft: #fbe6e6;
     --shadow: 0 1px 2px rgba(19, 26, 46, 0.04), 0 8px 24px -12px rgba(19, 26, 46, 0.12);
   }
-
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
+    :root {
       --ink-900: #edf0fa;
       --ink-700: #c7cce2;
       --ink-500: #8d93b2;
@@ -42,25 +46,6 @@
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
     }
   }
-  :root[data-theme="dark"] {
-    --ink-900: #edf0fa;
-    --ink-700: #c7cce2;
-    --ink-500: #8d93b2;
-    --ink-300: #565d80;
-    --paper-0: #0b0e1a;
-    --paper-50: #121625;
-    --card: #171c30;
-    --line: #262c47;
-    --accent: #7f8cff;
-    --accent-soft: #232a52;
-    --good: #4bd39a;
-    --good-soft: #163629;
-    --warn: #e3a94a;
-    --warn-soft: #3a2e14;
-    --bad: #f07a7a;
-    --bad-soft: #3a1f22;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
-  }
 
   * { box-sizing: border-box; }
   body {
@@ -71,208 +56,85 @@
     -webkit-font-smoothing: antialiased;
   }
   a { color: inherit; text-decoration: none; }
-  .mono {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-variant-numeric: tabular-nums;
-  }
-  .wrap {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 28px 24px 64px;
-  }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 64px; }
 
-  /* ---- header ---- */
   header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-    padding-bottom: 20px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap; margin-bottom: 28px; padding-bottom: 20px;
     border-bottom: 1px solid var(--line);
   }
   .eyebrow {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin: 0 0 6px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 6px;
   }
-  h1 {
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    margin: 0;
-    text-wrap: balance;
-  }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
   h1 a { cursor: pointer; }
   .sync-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: var(--ink-500);
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 8px 14px 8px 10px;
-    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-500);
+    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px 8px 10px; box-shadow: var(--shadow);
   }
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--good);
-    flex: none;
-  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); flex: none; }
   .dot.stale { background: var(--warn); }
   .dot.unknown { background: var(--ink-300); }
 
-  /* ---- section headings ---- */
   h2 {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-500);
-    margin: 0 0 14px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-500); margin: 0 0 14px;
   }
   section { margin-bottom: 36px; }
 
-  /* ---- breadcrumb / back ---- */
   .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 18px;
-    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+    color: var(--accent); margin-bottom: 18px; cursor: pointer;
   }
   .back-link:hover { text-decoration: underline; }
 
-  /* ---- course cards (overview grid) ---- */
-  .courses {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 14px;
-  }
+  .courses { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
   .course-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px 18px 16px;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    cursor: pointer;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 18px 18px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+    gap: 14px; cursor: pointer;
   }
   @media (prefers-reduced-motion: no-preference) {
     .course-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
     .course-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(19,26,46,.08), 0 16px 32px -16px rgba(19,26,46,.2); }
   }
   .course-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .course-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .course-name {
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1.3;
-    text-wrap: balance;
-  }
-  .course-name-lg {
-    font-size: 24px;
-    font-weight: 800;
-    line-height: 1.25;
-    text-wrap: balance;
-  }
-  .ring-pct {
-    flex: none;
-    position: relative;
-    width: 56px;
-    height: 56px;
-  }
+  .course-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .course-name { font-size: 15px; font-weight: 700; line-height: 1.3; text-wrap: balance; }
+  .course-name-lg { font-size: 24px; font-weight: 800; line-height: 1.25; text-wrap: balance; }
+  .ring-pct { flex: none; position: relative; width: 56px; height: 56px; }
   .ring-pct.lg { width: 84px; height: 84px; }
   .ring-pct svg { transform: rotate(-90deg); }
   .ring-pct .pct-label {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 600;
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
   }
   .ring-pct.lg .pct-label { font-size: 19px; }
   .breakdown { display: flex; flex-direction: column; gap: 6px; }
   .breakdown-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 10px;
-    align-items: center;
-    font-size: 12.5px;
-    color: var(--ink-700);
+    display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center;
+    font-size: 12.5px; color: var(--ink-700);
   }
   .breakdown-row .bar-track {
-    grid-column: 1 / -1;
-    height: 5px;
-    border-radius: 3px;
-    background: var(--paper-0);
-    overflow: hidden;
+    grid-column: 1 / -1; height: 5px; border-radius: 3px; background: var(--paper-0); overflow: hidden;
   }
-  .breakdown-row .bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    background: var(--accent);
-  }
+  .breakdown-row .bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
   .breakdown-name { grid-column: 1; }
   .breakdown-weight { color: var(--ink-500); }
-  .last-synced {
-    font-size: 11px;
-    color: var(--ink-300);
-    border-top: 1px dashed var(--line);
-    padding-top: 10px;
-  }
+  .last-synced { font-size: 11px; color: var(--ink-300); border-top: 1px dashed var(--line); padding-top: 10px; }
 
-  /* ---- two column lower area (overview) ---- */
-  .lower {
-    display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    gap: 24px;
-    align-items: start;
-  }
-  @media (max-width: 860px) {
-    .lower { grid-template-columns: 1fr; }
-  }
+  .lower { display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 860px) { .lower { grid-template-columns: 1fr; } }
 
-  .panel {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
   .panel-inner { padding: 16px 18px 18px; }
 
-  /* ---- course detail hero ---- */
   .detail-hero {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    padding: 22px 24px;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    margin-bottom: 24px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+    padding: 22px 24px; display: flex; align-items: center; gap: 22px; margin-bottom: 24px;
   }
   .detail-hero .breakdown { flex: 1; min-width: 220px; }
   .detail-hero .breakdown-row { font-size: 13.5px; }
@@ -281,156 +143,74 @@
     .detail-hero .breakdown { min-width: 0; width: 100%; }
   }
 
-  /* ---- deadlines ---- */
   .day-group + .day-group { margin-top: 18px; }
   .day-label {
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--ink-500);
-    margin-bottom: 8px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--ink-500); margin-bottom: 8px;
   }
   .deadline-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 10px 10px 12px;
-    border-left: 3px solid var(--ink-300);
-    border-radius: 8px;
-    background: var(--paper-50);
-    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 12px;
+    border-left: 3px solid var(--ink-300); border-radius: 8px; background: var(--paper-50); margin-bottom: 6px;
   }
   a.deadline-row { cursor: pointer; }
-  @media (prefers-reduced-motion: no-preference) {
-    a.deadline-row { transition: background 0.12s ease; }
-  }
+  @media (prefers-reduced-motion: no-preference) { a.deadline-row { transition: background 0.12s ease; } }
   a.deadline-row:hover { background: var(--accent-soft); }
   .deadline-row.due-today { border-left-color: var(--bad); }
   .deadline-row.due-soon { border-left-color: var(--warn); }
   .deadline-row.done { border-left-color: var(--good); opacity: 0.7; }
   .deadline-main { flex: 1; min-width: 0; }
-  .deadline-title {
-    font-size: 13.5px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .deadline-course {
-    font-size: 11.5px;
-    color: var(--ink-500);
-    margin-top: 2px;
-  }
+  .deadline-title { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .deadline-course { font-size: 11.5px; color: var(--ink-500); margin-top: 2px; }
   .badge {
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 999px;
-    flex: none;
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 999px; flex: none;
   }
   .badge.quiz { background: var(--warn-soft); color: var(--warn); }
   .badge.assignment { background: var(--accent-soft); color: var(--accent); }
   .badge.event { background: var(--paper-0); color: var(--ink-500); }
-  .deadline-time {
-    font-size: 12px;
-    color: var(--ink-500);
-    flex: none;
-    text-align: right;
-    min-width: 64px;
-  }
-  .open-hint {
-    flex: none;
-    font-size: 10.5px;
-    color: var(--ink-300);
-  }
+  .deadline-time { font-size: 12px; color: var(--ink-500); flex: none; text-align: right; min-width: 64px; }
+  .open-hint { flex: none; font-size: 10.5px; color: var(--ink-300); }
 
-  /* ---- files ---- */
   .file-course + .file-course { margin-top: 16px; }
-  .file-course-name {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--ink-700);
-  }
+  .file-course-name { font-size: 12.5px; font-weight: 700; color: var(--ink-700); }
   .file-course-name a:hover { color: var(--accent); }
   .file-folder {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-300);
-    margin: 10px 0 4px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink-300); margin: 10px 0 4px;
   }
   .file-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 6px;
-    margin: 0 -6px;
-    border-bottom: 1px solid var(--line);
-    font-size: 12.5px;
-    border-radius: 6px;
+    display: flex; align-items: center; gap: 10px; padding: 8px 6px; margin: 0 -6px;
+    border-bottom: 1px solid var(--line); font-size: 12.5px; border-radius: 6px;
   }
   .file-row:last-child { border-bottom: none; }
   a.file-row { cursor: pointer; }
-  @media (prefers-reduced-motion: no-preference) {
-    a.file-row { transition: background 0.12s ease; }
-  }
+  @media (prefers-reduced-motion: no-preference) { a.file-row { transition: background 0.12s ease; } }
   a.file-row:hover { background: var(--accent-soft); }
   .file-icon {
-    flex: none;
-    width: 26px;
-    height: 26px;
-    border-radius: 6px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    flex: none; width: 26px; height: 26px; border-radius: 6px; background: var(--accent-soft);
+    color: var(--accent); display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; letter-spacing: -0.02em;
   }
   .file-name {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--ink-900);
-    font-weight: 500;
+    flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: var(--ink-900); font-weight: 500;
   }
   .file-meta { color: var(--ink-300); font-size: 11px; flex: none; }
-  .file-nolink {
-    flex: none;
-    font-size: 10.5px;
-    color: var(--ink-300);
-  }
-  .files-note {
-    font-size: 11.5px;
-    color: var(--ink-300);
-    padding: 12px 18px 14px;
-    border-top: 1px dashed var(--line);
-  }
-
-  .empty-note {
-    font-size: 13px;
-    color: var(--ink-500);
-    padding: 6px 2px;
-  }
+  .files-note { font-size: 11.5px; color: var(--ink-300); padding: 12px 18px 14px; border-top: 1px dashed var(--line); }
+  .empty-note { font-size: 13px; color: var(--ink-500); padding: 6px 2px; }
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header>
     <div>
-      <p class="eyebrow">Narxoz · Canvas</p>
+      <p class="eyebrow">Canvas</p>
       <h1><a href="#/" id="titleLink">Silla</a></h1>
     </div>
     <div class="sync-status" id="syncStatus">
       <span class="dot unknown" id="syncDot"></span>
-      <span id="syncText">подключение…</span>
+      <span id="syncText">—</span>
     </div>
   </header>
 
@@ -439,16 +219,23 @@
   </main>
 </div>
 
+<script id="dashboard-data" type="application/json">__DASHBOARD_DATA__</script>
 <script>
 (function () {
   "use strict";
+
+  const DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
+  const state = {
+    courses: DATA.courses || [],
+    events: DATA.events || [],
+    filesByCourse: DATA.filesByCourse || {},
+    meta: DATA.meta || null,
+  };
 
   const RING_R = 24;
   const RING_CIRC = 2 * Math.PI * RING_R;
   const RING_R_LG = 36;
   const RING_CIRC_LG = 2 * Math.PI * RING_R_LG;
-
-  const state = { courses: [], events: [], filesByCourse: {}, meta: null };
 
   function escapeHtml(s) {
     return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -605,8 +392,6 @@
       .join("");
   }
 
-  /* ---------------- views ---------------- */
-
   function viewOverview() {
     const courses = state.courses.slice().sort((a, b) => (a.name || "").localeCompare(b.name || "", "ru"));
     const courseCards = courses.length
@@ -647,7 +432,7 @@
         <section class="panel">
           <h2 style="padding: 16px 18px 0;">Файлы курсов</h2>
           <div class="panel-inner">${filesHtml}</div>
-          <p class="files-note">Нажмите на файл, чтобы открыть его.</p>
+          <p class="files-note">Нажмите на файл, чтобы открыть его в Canvas.</p>
         </section>
       </div>`;
   }
@@ -657,7 +442,7 @@
     if (!course) {
       return `
         <a class="back-link" href="#/">← Все дисциплины</a>
-        <p class="empty-note">Курс не найден (возможно, ещё не синхронизирован).</p>`;
+        <p class="empty-note">Курс не найден.</p>`;
     }
     const courseEvents = state.events.filter((e) => String(e.course_id) === String(id));
     const filesEntry = state.filesByCourse[id];
@@ -683,7 +468,7 @@
         <section class="panel">
           <h2 style="padding: 16px 18px 0;">Файлы</h2>
           <div class="panel-inner">${renderFilesForCourse(filesEntry)}</div>
-          <p class="files-note">Нажмите на файл, чтобы открыть его.</p>
+          <p class="files-note">Нажмите на файл, чтобы открыть его в Canvas.</p>
         </section>
       </div>`;
   }
@@ -717,40 +502,9 @@
   }
 
   window.addEventListener("hashchange", render);
-
-  async function init() {
-    const db = (window.claude && window.claude.use) ? await window.claude.use("db") : null;
-    if (!db) {
-      document.getElementById("syncText").textContent = "хранилище недоступно";
-      document.getElementById("app").innerHTML = `<p class="empty-note">Нет доступа к данным. Откройте страницу через Claude.</p>`;
-      return;
-    }
-
-    db.collection("courses").onSnapshot((snap) => {
-      state.courses = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter(Boolean);
-      render();
-    });
-
-    db.doc("sync/calendar").onSnapshot((snap) => {
-      state.events = (snap.exists && snap.data().events) || [];
-      render();
-    });
-
-    db.collection("files").onSnapshot((snap) => {
-      const byCourse = {};
-      snap.docs.forEach((d) => { byCourse[d.id] = d.data(); });
-      state.filesByCourse = byCourse;
-      render();
-    });
-
-    db.doc("sync/meta").onSnapshot((snap) => {
-      state.meta = snap.exists ? snap.data() : null;
-      updateSyncStatus(state.meta);
-    });
-
-    render();
-  }
-
-  init();
+  updateSyncStatus(state.meta);
+  render();
 })();
 </script>
+</body>
+</html>
