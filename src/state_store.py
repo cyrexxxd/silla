@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS files (
     size_bytes INTEGER,
     folder_path TEXT,
     local_path TEXT,
-    canvas_url TEXT
+    canvas_url TEXT,
+    preview_path TEXT
 );
 
 CREATE TABLE IF NOT EXISTS sync_log (
@@ -117,12 +118,14 @@ def upsert_calendar_event(conn, *, event_id, course_id, course_name, title,
 
 
 def upsert_file(conn, *, canvas_file_id, course_id, course_name, filename,
-                 canvas_updated_at, size_bytes, folder_path, local_path, canvas_url):
+                 canvas_updated_at, size_bytes, folder_path, local_path, canvas_url,
+                 preview_path=None):
     conn.execute(
         """
         INSERT INTO files (canvas_file_id, course_id, course_name, filename,
-                            canvas_updated_at, size_bytes, folder_path, local_path, canvas_url)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            canvas_updated_at, size_bytes, folder_path, local_path, canvas_url,
+                            preview_path)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(canvas_file_id) DO UPDATE SET
             course_name=excluded.course_name,
             filename=excluded.filename,
@@ -130,11 +133,13 @@ def upsert_file(conn, *, canvas_file_id, course_id, course_name, filename,
             size_bytes=excluded.size_bytes,
             folder_path=excluded.folder_path,
             local_path=excluded.local_path,
-            canvas_url=excluded.canvas_url
+            canvas_url=excluded.canvas_url,
+            preview_path=excluded.preview_path
         """,
         (
             canvas_file_id, course_id, course_name, filename,
             canvas_updated_at, size_bytes, folder_path, local_path, canvas_url,
+            preview_path,
         ),
     )
 

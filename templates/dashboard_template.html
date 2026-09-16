@@ -305,10 +305,11 @@
   }
 
   function renderFileRow(f) {
-    // Prefer opening the actual downloaded file directly (PDF preview, native app, ...)
-    // over Canvas's file page, which needs a login and just wraps the same content.
-    const openUrl = f.file_url || f.canvas_url;
-    const hint = f.file_url ? "Открыть" : (f.canvas_url ? "Canvas ↗" : "");
+    // Prefer a converted PDF preview (opens inline in the browser) over the raw file
+    // (which downloads for formats browsers can't render, like .pptx/.docx) over
+    // Canvas's file page, which needs a login and just wraps the same content.
+    const openUrl = f.preview_url || f.file_url || f.canvas_url;
+    const hint = f.preview_url ? "Просмотр" : (f.file_url ? "Открыть" : (f.canvas_url ? "Canvas ↗" : ""));
     const inner = `
       <span class="file-icon">${escapeHtml(fileExt(f.filename))}</span>
       <span class="file-name">${escapeHtml(f.filename)}</span>

@@ -7,7 +7,7 @@ import time
 
 import requests
 
-from . import config, state_store
+from . import config, preview_convert, state_store
 
 _SANITIZE_RE = re.compile(r'[\/:*?"<>|]')
 
@@ -67,6 +67,16 @@ def sync_course_files(canvas_client_with_retry, conn, course, synced_root, error
                 errors.append(f"course {course.id} file {filename!r}: download failed: {exc!r}")
                 continue  # don't record file metadata as synced if the download failed
 
+        preview_path = known["preview_path"] if known else None
+        if (needs_download or not preview_path) and preview_convert.needs_conversion(filename):
+            if preview_convert.soffice_available():
+                # _previews lives next to _synced (a sibling of synced_root), never
+                # nested inside it, regardless of how deep rel_folder is.
+                preview_dir = synced_root.parent / "_previews" / rel_folder if rel_folder else synced_root.parent / "_previews"
+                preview_path = preview_convert.convert_to_pdf(dest_path, preview_dir)
+                if not preview_path:
+                    errors.append(f"course {course.id} file {filename!r}: PDF preview conversion failed")
+
         state_store.upsert_file(
             conn,
             canvas_file_id=canvas_file_id,
@@ -78,6 +88,7 @@ def sync_course_files(canvas_client_with_retry, conn, course, synced_root, error
             folder_path=rel_folder,
             local_path=str(dest_path),
             canvas_url=f"{config.CANVAS_BASE_URL}/courses/{course.id}/files/{canvas_file_id}",
+            preview_path=preview_path,
         )
 
     return downloaded

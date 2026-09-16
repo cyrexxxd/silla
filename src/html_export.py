@@ -16,11 +16,14 @@ def _group_files_by_course(files: list[dict]) -> dict:
         cid = str(f["course_id"])
         entry = grouped.setdefault(cid, {"course_name": f["course_name"], "files": []})
         local_path = f.get("local_path")
-        # file:// link to the actual downloaded file — opens it directly (PDF preview,
-        # native app, etc.) instead of round-tripping through a Canvas login page.
-        # Only meaningful for this local dashboard; the hosted Claude Artifact has no
-        # filesystem access and must fall back to canvas_url.
+        preview_path = f.get("preview_path")
+        # file:// links to the actual downloaded file (or its converted PDF preview, for
+        # formats browsers can't render natively) — opens it directly instead of
+        # round-tripping through a Canvas login page. Only meaningful for this local
+        # dashboard; the hosted Claude Artifact has no filesystem access and must fall
+        # back to canvas_url.
         file_url = Path(local_path).resolve().as_uri() if local_path else None
+        preview_url = Path(preview_path).resolve().as_uri() if preview_path else None
         entry["files"].append(
             {
                 "filename": f["filename"],
@@ -28,6 +31,7 @@ def _group_files_by_course(files: list[dict]) -> dict:
                 "folder_path": f["folder_path"],
                 "canvas_url": f["canvas_url"],
                 "file_url": file_url,
+                "preview_url": preview_url,
             }
         )
     return grouped
